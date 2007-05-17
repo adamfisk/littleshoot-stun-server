@@ -50,6 +50,22 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.lastbamboo</groupId>
+                <artifactId>lastbamboo-maven-plugin</artifactId>
+                <configuration>
+                    <bundleName>LittleShoot</bundleName>
+                    <mainClass>
+                        org.lastbamboo.common.stun.server.StunLauncher
+                        </mainClass>
+                    <javaSystemProps>
+                        <property>
+                            <name>org.apache.commons.logging.Log</name>
+                            <value>org.apache.commons.logging.impl.Log4JLogger</value>
+                            </property>
+                        </javaSystemProps>
+                    </configuration>
+                </plugin>
             </plugins>
         </build>
     </project>
