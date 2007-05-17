@@ -37,13 +37,15 @@ public class StunServerTest extends TestCase implements MappedAddressListener
     
     public void testStunServer() throws Exception
         {
-        final StunAttributesFactory attributesFactory = 
-            new StunAttributesFactoryImpl();
+        final StunLauncher launcher = new StunLauncher();
+        launcher.launch();
+        //final StunAttributesFactory attributesFactory = 
+          //  new StunAttributesFactoryImpl();
         
-        final StunMessageFactory messageFactory = 
-            new StunMessageFactoryImpl(attributesFactory);
+        //final StunMessageFactory messageFactory = 
+          //  new StunMessageFactoryImpl(attributesFactory);
         
-        final StunServer server = new StunServerImpl(messageFactory);
+        //final StunServer server = new StunServerImpl(messageFactory);
         
         LOG.debug("Server started...running clients...");
         
