@@ -41,8 +41,16 @@ public class StunEncoder implements ProtocolEncoder
         buf.putShort((short) (stunMessage.getBodyLength() & 0xffff));
         
         
-        buf.putInt(MAGIC_COOKIE);
-        buf.put(stunMessage.getTransactionId());
+        final byte[] transactionId = stunMessage.getTransactionId();
+        
+        // We only include the magic cookie if it's a new-style STUN request.
+        // Otherwise, we use the old 16 byte transaction ID for backwards
+        // compatibility.
+        if (transactionId.length == 12)
+            {
+            buf.putInt(MAGIC_COOKIE);
+            }
+        buf.put(transactionId);
         
         final Map<StunAttributeType, StunAttribute> attributes = 
             stunMessage.getAttributes();
