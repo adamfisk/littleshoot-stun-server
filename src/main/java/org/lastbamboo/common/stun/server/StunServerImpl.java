@@ -33,6 +33,11 @@ public class StunServerImpl implements StunServer
 
     private final StunMessageFactory m_messageFactory;
     
+    /**
+     * Creates a new STUN server.
+     * 
+     * @param messageFactory The factory class for creating STUN messages.
+     */
     public StunServerImpl(final StunMessageFactory messageFactory)
         {
         m_messageFactory = messageFactory;
@@ -42,25 +47,16 @@ public class StunServerImpl implements StunServer
     private void createUdpServer()
         {
         final ExecutorService executor = Executors.newCachedThreadPool();
-        //final int processors = Runtime.getRuntime().availableProcessors();
-        //private IoAcceptor acceptor = new DatagramAcceptor();
         final IoAcceptor acceptor = new DatagramAcceptor(executor);
-    //        new SocketAcceptor(processors, executor);
         final IoAcceptorConfig config = new DatagramAcceptorConfig();
-        //final IoAcceptorConfig config = new SocketAcceptorConfig();
         config.getFilterChain().addLast("executor", 
             new ExecutorFilter(executor));
-        
-        //final TextLineCodecFactory textCodecFactory = 
-          //  new TextLineCodecFactory(Charset.forName("US-ASCII"));
-        
         
         final ProtocolEncoder encoder = new StunEncoder();
         final ProtocolDecoder decoder = new StunDecoder(m_messageFactory);
         final ProtocolCodecFilter stunFilter = 
             new ProtocolCodecFilter(encoder, decoder);
-        config.getFilterChain().addLast("to-string", stunFilter);
-        //config.getFilterChain().addLast("to-stun", new StunIoFilter());
+        config.getFilterChain().addLast("to-stun", stunFilter);
         
         final InetSocketAddress address = new InetSocketAddress(STUN_PORT);
 

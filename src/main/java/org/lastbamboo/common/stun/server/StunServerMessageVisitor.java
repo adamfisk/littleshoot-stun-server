@@ -9,7 +9,6 @@ import org.apache.mina.common.WriteFuture;
 import org.lastbamboo.common.stun.stack.message.BindingRequest;
 import org.lastbamboo.common.stun.stack.message.BindingResponse;
 import org.lastbamboo.common.stun.stack.message.StunMessage;
-import org.lastbamboo.common.stun.stack.message.StunMessageFactory;
 import org.lastbamboo.common.stun.stack.message.StunMessageVisitor;
 
 /**
@@ -23,6 +22,11 @@ public class StunServerMessageVisitor implements StunMessageVisitor
     
     private final IoSession m_session;
 
+    /**
+     * Creates a new visitor for visiting STUN messages on the server side.
+     * 
+     * @param session The MINA IO session.
+     */
     public StunServerMessageVisitor(final IoSession session)
         {
         m_session = session;

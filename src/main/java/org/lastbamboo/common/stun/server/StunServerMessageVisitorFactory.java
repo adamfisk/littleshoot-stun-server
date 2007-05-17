@@ -4,8 +4,11 @@ import org.apache.mina.common.IoSession;
 import org.lastbamboo.common.stun.stack.message.StunMessageVisitor;
 import org.lastbamboo.common.stun.stack.message.StunMessageVisitorFactory;
 
+/**
+ * Class for creating STUN message visitors on the server side. 
+ */
 public class StunServerMessageVisitorFactory implements
-        StunMessageVisitorFactory
+    StunMessageVisitorFactory
     {
 
     public StunMessageVisitor createVisitor(final IoSession session)
