@@ -6,4 +6,9 @@ package org.lastbamboo.common.stun.server;
 public interface StunServer
     {
 
+    /**
+     * Starts the server.
+     */
+    void start();
+
     }

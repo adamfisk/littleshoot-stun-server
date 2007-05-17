@@ -41,10 +41,9 @@ public class StunServerImpl implements StunServer
     public StunServerImpl(final StunMessageFactory messageFactory)
         {
         m_messageFactory = messageFactory;
-        createUdpServer();
         }
-
-    private void createUdpServer()
+    
+    public void start()
         {
         final ExecutorService executor = Executors.newCachedThreadPool();
         final IoAcceptor acceptor = new DatagramAcceptor(executor);
