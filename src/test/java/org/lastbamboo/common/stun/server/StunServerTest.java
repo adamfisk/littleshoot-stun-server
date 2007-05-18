@@ -23,7 +23,7 @@ public class StunServerTest extends TestCase implements MappedAddressListener
     
     public void testStunServer() throws Exception
         {
-        final StunLauncher launcher = new StunLauncher();
+        final StunServerLauncher launcher = new StunServerLauncher();
         launcher.launch();
         
         LOG.debug("Server started...running clients...");

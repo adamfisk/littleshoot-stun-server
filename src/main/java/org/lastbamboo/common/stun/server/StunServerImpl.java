@@ -15,8 +15,9 @@ import org.apache.mina.filter.codec.ProtocolEncoder;
 import org.apache.mina.filter.executor.ExecutorFilter;
 import org.apache.mina.transport.socket.nio.DatagramAcceptor;
 import org.apache.mina.transport.socket.nio.DatagramAcceptorConfig;
+import org.lastbamboo.common.stun.stack.message.StunDecoder;
+import org.lastbamboo.common.stun.stack.message.StunEncoder;
 import org.lastbamboo.common.stun.stack.message.StunMessageFactory;
-import org.lastbamboo.common.stun.stack.message.StunMessageVisitorFactory;
 
 /**
  * Implementation of a STUN server.
@@ -59,11 +60,9 @@ public class StunServerImpl implements StunServer
         
         final InetSocketAddress address = new InetSocketAddress(STUN_PORT);
 
-        final StunMessageVisitorFactory factory = 
-            new StunServerMessageVisitorFactory();
         try
             {
-            acceptor.bind(address, new StunIoHandler(factory), config);
+            acceptor.bind(address, new StunServerIoHandler(), config);
             LOG.debug("Started STUN server!!");
             }
         catch (final IOException e)

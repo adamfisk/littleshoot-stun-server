@@ -10,10 +10,10 @@ import org.lastbamboo.common.stun.stack.message.attributes.StunAttributesFactory
 /**
  * Launches the STUN server.
  */
-public class StunLauncher
+public class StunServerLauncher
     {
 
-    private static final Log LOG = LogFactory.getLog(StunLauncher.class);
+    private static final Log LOG = LogFactory.getLog(StunServerLauncher.class);
     
     /**
      * Launches the STUN server.
@@ -23,7 +23,7 @@ public class StunLauncher
     public static void main(final String[] args)
         {
         LOG.debug("Launching SIP and TURN servers...");
-        final StunLauncher launcher = new StunLauncher();
+        final StunServerLauncher launcher = new StunServerLauncher();
         LOG.debug("Created launcher");
         launcher.launch();
         LOG.debug("Started launcher");

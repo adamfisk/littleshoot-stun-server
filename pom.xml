@@ -56,7 +56,7 @@
                 <configuration>
                     <bundleName>LittleShoot</bundleName>
                     <mainClass>
-                        org.lastbamboo.common.stun.server.StunLauncher
+                        org.lastbamboo.common.stun.server.StunServerLauncher
                         </mainClass>
                     <javaSystemProps>
                         <property>
