@@ -10,6 +10,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.mina.common.ByteBuffer;
 import org.apache.mina.common.IoAcceptor;
 import org.apache.mina.common.IoAcceptorConfig;
+import org.apache.mina.common.IoHandler;
 import org.apache.mina.common.SimpleByteBufferAllocator;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.filter.codec.ProtocolDecoder;
@@ -62,11 +63,13 @@ public class StunServerImpl implements StunServer
             new ProtocolCodecFilter(encoder, decoder);
         config.getFilterChain().addLast("to-stun", stunFilter);
         
+        final IoHandler handler = new StunServerIoHandler();
+        //acceptor.setHandler(handler);
         final InetSocketAddress address = new InetSocketAddress(STUN_PORT);
-
+        //acceptor.setLocalAddress(address);
         try
             {
-            acceptor.bind(address, new StunServerIoHandler(), config);
+            acceptor.bind(address, handler, config);
             LOG.debug("Started STUN server!!");
             }
         catch (final IOException e)
