@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.lastbamboo.common.stun.stack.message.StunMessageFactory;
 import org.lastbamboo.common.stun.stack.message.StunMessageFactoryImpl;
+import org.lastbamboo.common.stun.stack.message.StunMessageVisitorFactory;
 import org.lastbamboo.common.stun.stack.message.attributes.StunAttributesFactory;
 import org.lastbamboo.common.stun.stack.message.attributes.StunAttributesFactoryImpl;
 
@@ -38,7 +39,11 @@ public class StunServerLauncher
             new StunAttributesFactoryImpl();
         final StunMessageFactory messageFactory = 
             new StunMessageFactoryImpl(attributesFactory);
-        final StunServer server = new StunServerImpl(messageFactory);
+        
+        final StunMessageVisitorFactory messageVisitorFactory = 
+            new StunServerMessageVisitorFactory();
+        final StunServer server = 
+            new StunServerImpl(messageFactory, messageVisitorFactory);
         server.start();
         }
 
