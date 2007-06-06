@@ -2,11 +2,7 @@ package org.lastbamboo.common.stun.server;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.lastbamboo.common.stun.stack.message.StunMessageFactory;
-import org.lastbamboo.common.stun.stack.message.StunMessageFactoryImpl;
 import org.lastbamboo.common.stun.stack.message.StunMessageVisitorFactory;
-import org.lastbamboo.common.stun.stack.message.attributes.StunAttributesFactory;
-import org.lastbamboo.common.stun.stack.message.attributes.StunAttributesFactoryImpl;
 
 /**
  * Launches the STUN server.
@@ -35,15 +31,9 @@ public class StunServerLauncher
      */
     public void launch()
         {
-        final StunAttributesFactory attributesFactory = 
-            new StunAttributesFactoryImpl();
-        final StunMessageFactory messageFactory = 
-            new StunMessageFactoryImpl(attributesFactory);
-        
         final StunMessageVisitorFactory messageVisitorFactory = 
             new StunServerMessageVisitorFactory();
-        final StunServer server = 
-            new StunServerImpl(messageFactory, messageVisitorFactory);
+        final StunServer server = new StunServerImpl(messageVisitorFactory);
         server.start();
         }
 

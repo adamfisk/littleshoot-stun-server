@@ -18,10 +18,10 @@ import org.apache.mina.filter.codec.ProtocolEncoder;
 import org.apache.mina.filter.executor.ExecutorFilter;
 import org.apache.mina.transport.socket.nio.DatagramAcceptor;
 import org.apache.mina.transport.socket.nio.DatagramAcceptorConfig;
-import org.lastbamboo.common.stun.stack.message.StunDecoder;
-import org.lastbamboo.common.stun.stack.message.StunEncoder;
-import org.lastbamboo.common.stun.stack.message.StunMessageFactory;
+import org.lastbamboo.common.stun.stack.decoder.StunMessageDecodingState;
+import org.lastbamboo.common.stun.stack.encoder.StunEncoder;
 import org.lastbamboo.common.stun.stack.message.StunMessageVisitorFactory;
+import org.lastbamboo.common.util.mina.StateMachineProtocolDecoder;
 
 /**
  * Implementation of a STUN server.
@@ -36,21 +36,16 @@ public class StunServerImpl implements StunServer
      */
     private static final int STUN_PORT = 3478;
 
-    private final StunMessageFactory m_messageFactory;
-
     private final StunMessageVisitorFactory m_visitorFactory;
     
     /**
      * Creates a new STUN server.
      * 
-     * @param messageFactory The factory class for creating STUN messages.
      * @param visitorFactory The factory for creating classes for visiting 
      * STUN messages and handling them appropriately as they're read.
      */
-    public StunServerImpl(final StunMessageFactory messageFactory,
-        final StunMessageVisitorFactory visitorFactory)
+    public StunServerImpl(final StunMessageVisitorFactory visitorFactory)
         {
-        m_messageFactory = messageFactory;
         m_visitorFactory = visitorFactory;
         ByteBuffer.setUseDirectBuffers(false);
         ByteBuffer.setAllocator(new SimpleByteBufferAllocator());
@@ -65,7 +60,9 @@ public class StunServerImpl implements StunServer
             new ExecutorFilter(executor));
         
         final ProtocolEncoder encoder = new StunEncoder();
-        final ProtocolDecoder decoder = new StunDecoder(m_messageFactory);
+        //final ProtocolDecoder decoder = new StunDecoder(m_messageFactory);
+        final ProtocolDecoder decoder = 
+            new StateMachineProtocolDecoder(new StunMessageDecodingState());
         final ProtocolCodecFilter stunFilter = 
             new ProtocolCodecFilter(encoder, decoder);
         config.getFilterChain().addLast("to-stun", stunFilter);

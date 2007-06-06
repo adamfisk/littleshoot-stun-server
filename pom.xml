@@ -16,6 +16,17 @@
         </parent>
 
     <dependencies>
+    
+        <dependency>
+            <groupId>commons-discovery</groupId>
+            <artifactId>commons-discovery</artifactId>
+            </dependency>
+
+        <dependency>
+            <groupId>commons-id</groupId>
+            <artifactId>commons-id</artifactId>
+            </dependency>
+            
         <dependency>
             <groupId>org.apache.mina</groupId>
             <artifactId>mina-core</artifactId>

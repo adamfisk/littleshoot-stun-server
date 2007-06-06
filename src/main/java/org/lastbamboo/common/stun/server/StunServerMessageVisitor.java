@@ -2,6 +2,7 @@ package org.lastbamboo.common.stun.server;
 
 import java.net.InetSocketAddress;
 
+import org.apache.commons.id.uuid.UUID;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.mina.common.IoSession;
@@ -37,9 +38,9 @@ public class StunServerMessageVisitor implements StunMessageVisitor
         final InetSocketAddress address = 
             (InetSocketAddress) m_session.getRemoteAddress();
         
-        final byte[] transactionId = binding.getTransactionId();
+        final UUID transactionId = binding.getTransactionId();
         final StunMessage response = 
-            new BindingResponse(transactionId, address);
+            new BindingResponse(transactionId.getRawBytes(), address);
         
         final WriteFuture future = this.m_session.write(response);
         
