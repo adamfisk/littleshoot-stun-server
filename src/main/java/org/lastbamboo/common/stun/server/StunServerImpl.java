@@ -19,7 +19,7 @@ import org.apache.mina.filter.executor.ExecutorFilter;
 import org.apache.mina.transport.socket.nio.DatagramAcceptor;
 import org.apache.mina.transport.socket.nio.DatagramAcceptorConfig;
 import org.lastbamboo.common.stun.stack.decoder.StunMessageDecodingState;
-import org.lastbamboo.common.stun.stack.encoder.StunMessageEncoder;
+import org.lastbamboo.common.stun.stack.encoder.StunProtocolEncoder;
 import org.lastbamboo.common.stun.stack.message.StunMessageVisitorFactory;
 import org.lastbamboo.common.util.mina.StateMachineProtocolDecoder;
 
@@ -59,8 +59,7 @@ public class StunServerImpl implements StunServer
         config.getFilterChain().addLast("executor", 
             new ExecutorFilter(executor));
         
-        final ProtocolEncoder encoder = new StunMessageEncoder();
-        //final ProtocolDecoder decoder = new StunDecoder(m_messageFactory);
+        final ProtocolEncoder encoder = new StunProtocolEncoder();
         final ProtocolDecoder decoder = 
             new StateMachineProtocolDecoder(new StunMessageDecodingState());
         final ProtocolCodecFilter stunFilter = 
@@ -69,9 +68,7 @@ public class StunServerImpl implements StunServer
         
         final IoHandler handler = 
             new StunServerIoHandler(this.m_visitorFactory);
-        //acceptor.setHandler(handler);
         final InetSocketAddress address = new InetSocketAddress(STUN_PORT);
-        //acceptor.setLocalAddress(address);
         try
             {
             acceptor.bind(address, handler, config);

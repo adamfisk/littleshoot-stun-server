@@ -1,9 +1,6 @@
 package org.lastbamboo.common.stun.server;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
-import java.util.Map;
 
 import org.apache.commons.id.uuid.UUID;
 import org.apache.commons.logging.Log;
@@ -11,14 +8,12 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.mina.common.IoSession;
 import org.apache.mina.common.WriteFuture;
 import org.lastbamboo.common.stun.stack.message.BindingRequest;
-import org.lastbamboo.common.stun.stack.message.SuccessfulBindingResponse;
 import org.lastbamboo.common.stun.stack.message.StunMessage;
 import org.lastbamboo.common.stun.stack.message.StunMessageVisitor;
-import org.lastbamboo.common.stun.stack.message.attributes.StunAttribute;
-import org.lastbamboo.common.stun.stack.message.attributes.StunAttributeType;
-import org.lastbamboo.common.stun.stack.message.attributes.turn.DataAttribute;
-import org.lastbamboo.common.stun.stack.message.attributes.turn.RemoteAddressAttribute;
+import org.lastbamboo.common.stun.stack.message.SuccessfulBindingResponse;
 import org.lastbamboo.common.stun.stack.message.turn.AllocateRequest;
+import org.lastbamboo.common.stun.stack.message.turn.ConnectRequest;
+import org.lastbamboo.common.stun.stack.message.turn.ConnectionStatusIndication;
 import org.lastbamboo.common.stun.stack.message.turn.DataIndication;
 import org.lastbamboo.common.stun.stack.message.turn.SendIndication;
 import org.lastbamboo.common.stun.stack.message.turn.SuccessfulAllocateResponse;
@@ -88,28 +83,7 @@ public class StunServerMessageVisitor implements StunMessageVisitor
 
     public void visitSendIndication(final SendIndication request)
         {
-        if (LOG.isDebugEnabled())
-            {
-            LOG.debug("Processing send request: "+request);
-            }
-        
-        final Map<Integer, StunAttribute> attributes = request.getAttributes();
-        
-        final RemoteAddressAttribute remoteAddressAttribute =
-            (RemoteAddressAttribute) request.getAttribute(
-                StunAttributeType.REMOTE_ADDRESS);
-        
-        final InetSocketAddress remoteAddress = 
-            remoteAddressAttribute.getInetSocketAddress();
-        //final RemoteAddressAttribute remoteAddressAttribute =
-          //  attributes.get(new Integer(StunAttributeType.REMOTE_ADDRESS));
-        
-        //final InetSocketAddress destinationAddress = 
-          //  request.getDestinationAddress();
-        
-        final DataAttribute dataAttribute = 
-            (DataAttribute) request.getAttribute(StunAttributeType.DATA);
-        
+        // TODO Auto-generated method stub
         
         }
 
@@ -120,6 +94,18 @@ public class StunServerMessageVisitor implements StunMessageVisitor
         }
 
     public void visitSuccessfulAllocateResponse(SuccessfulAllocateResponse response)
+        {
+        // TODO Auto-generated method stub
+        
+        }
+
+    public void visitConnectRequest(ConnectRequest request)
+        {
+        // TODO Auto-generated method stub
+        
+        }
+
+    public void visitConnectionStatusIndication(ConnectionStatusIndication indication)
         {
         // TODO Auto-generated method stub
         
