@@ -2,6 +2,7 @@ package org.lastbamboo.common.stun.server;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -11,22 +12,23 @@ import org.apache.mina.common.ByteBuffer;
 import org.apache.mina.common.IoAcceptor;
 import org.apache.mina.common.IoAcceptorConfig;
 import org.apache.mina.common.IoHandler;
+import org.apache.mina.common.IoService;
+import org.apache.mina.common.IoServiceConfig;
+import org.apache.mina.common.IoServiceListener;
+import org.apache.mina.common.IoSession;
 import org.apache.mina.common.SimpleByteBufferAllocator;
+import org.apache.mina.filter.codec.ProtocolCodecFactory;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
-import org.apache.mina.filter.codec.ProtocolDecoder;
-import org.apache.mina.filter.codec.ProtocolEncoder;
 import org.apache.mina.filter.executor.ExecutorFilter;
 import org.apache.mina.transport.socket.nio.DatagramAcceptor;
 import org.apache.mina.transport.socket.nio.DatagramAcceptorConfig;
-import org.lastbamboo.common.stun.stack.decoder.StunMessageDecodingState;
-import org.lastbamboo.common.stun.stack.encoder.StunProtocolEncoder;
+import org.lastbamboo.common.stun.stack.decoder.StunProtocolCodecFactory;
 import org.lastbamboo.common.stun.stack.message.StunMessageVisitorFactory;
-import org.lastbamboo.common.util.mina.StateMachineProtocolDecoder;
 
 /**
  * Implementation of a STUN server.
  */
-public class StunServerImpl implements StunServer
+public class StunServerImpl implements StunServer, IoServiceListener
     {
 
     private static final Log LOG = LogFactory.getLog(StunServerImpl.class);
@@ -37,7 +39,7 @@ public class StunServerImpl implements StunServer
     private static final int STUN_PORT = 3478;
 
     private final StunMessageVisitorFactory m_visitorFactory;
-    
+
     /**
      * Creates a new STUN server.
      * 
@@ -55,19 +57,19 @@ public class StunServerImpl implements StunServer
         {
         final ExecutorService executor = Executors.newCachedThreadPool();
         final IoAcceptor acceptor = new DatagramAcceptor(executor);
+        acceptor.addListener(this);
         final IoAcceptorConfig config = new DatagramAcceptorConfig();
+        
+        final ProtocolCodecFactory codecFactory = 
+            new StunProtocolCodecFactory();
+        final ProtocolCodecFilter codecFilter = 
+            new ProtocolCodecFilter(codecFactory);
+        config.getFilterChain().addLast("stunFilter", codecFilter);
         config.getFilterChain().addLast("executor", 
             new ExecutorFilter(executor));
-        
-        final ProtocolEncoder encoder = new StunProtocolEncoder();
-        final ProtocolDecoder decoder = 
-            new StateMachineProtocolDecoder(new StunMessageDecodingState());
-        final ProtocolCodecFilter stunFilter = 
-            new ProtocolCodecFilter(encoder, decoder);
-        config.getFilterChain().addLast("to-stun", stunFilter);
-        
         final IoHandler handler = 
             new StunServerIoHandler(this.m_visitorFactory);
+        
         final InetSocketAddress address = new InetSocketAddress(STUN_PORT);
         try
             {
@@ -78,5 +80,33 @@ public class StunServerImpl implements StunServer
             {
             LOG.error("Could not bind server", e);
             }
+        }
+
+    public void serviceActivated(final IoService service, 
+        final SocketAddress serviceAddress, final IoHandler handler, 
+        final IoServiceConfig config)
+        {
+        // TODO Auto-generated method stub
+        
+        }
+
+    public void serviceDeactivated(final IoService service, 
+        final SocketAddress serviceAddress, final IoHandler handler, 
+        final IoServiceConfig config)
+        {
+        // TODO Auto-generated method stub
+        
+        }
+
+    public void sessionCreated(IoSession session)
+        {
+        // TODO Auto-generated method stub
+        
+        }
+
+    public void sessionDestroyed(IoSession session)
+        {
+        // TODO Auto-generated method stub
+        
         }
     }
