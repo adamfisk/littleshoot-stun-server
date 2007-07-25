@@ -6,8 +6,8 @@ import org.apache.commons.id.uuid.UUID;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.mina.common.IoSession;
-import org.apache.mina.common.WriteFuture;
 import org.lastbamboo.common.stun.stack.message.BindingRequest;
+import org.lastbamboo.common.stun.stack.message.NullStunMessage;
 import org.lastbamboo.common.stun.stack.message.StunMessage;
 import org.lastbamboo.common.stun.stack.message.StunMessageVisitor;
 import org.lastbamboo.common.stun.stack.message.SuccessfulBindingResponse;
@@ -21,7 +21,7 @@ import org.lastbamboo.common.stun.stack.message.turn.SuccessfulAllocateResponse;
 /**
  * Class that visits read messages on a STUN server.
  */
-public class StunServerMessageVisitor implements StunMessageVisitor
+public class StunServerMessageVisitor implements StunMessageVisitor<Object>
     {
 
     private static final Log LOG = 
@@ -39,7 +39,7 @@ public class StunServerMessageVisitor implements StunMessageVisitor
         m_session = session;
         }
 
-    public void visitBindingRequest(final BindingRequest binding)
+    public Object visitBindingRequest(final BindingRequest binding)
         {
         final InetSocketAddress address = 
             (InetSocketAddress) m_session.getRemoteAddress();
@@ -48,67 +48,59 @@ public class StunServerMessageVisitor implements StunMessageVisitor
         final StunMessage response = 
             new SuccessfulBindingResponse(transactionId.getRawBytes(), address);
         
-        final WriteFuture future = this.m_session.write(response);
-        
-        future.join();
-        
-        if (future.isWritten())
-            {
-            if (LOG.isDebugEnabled())
-                {
-                LOG.debug("Wrote message");
-                }
-            }
-        else
-            {
-            if (LOG.isDebugEnabled())
-                {
-                LOG.debug("Did not write message");
-                }
-            }
+        this.m_session.write(response);
+        return null;
         }
 
-    public void visitSuccessfulBindingResponse(final SuccessfulBindingResponse response)
+    public Object visitAllocateRequest(final AllocateRequest request)
+        {
+        LOG.debug("Received unhandled message on server: "+request);
+        return null;
+        }
+
+    public Object visitSendIndication(final SendIndication request)
+        {
+        LOG.debug("Received unhandled message on server: "+request);
+        return null;
+        }
+
+    public Object visitDataIndication(final DataIndication data)
+        {
+        LOG.debug("Received unhandled message on server: "+data);
+        return null;
+        }
+    
+    public Object visitConnectRequest(final ConnectRequest request)
+        {
+        LOG.debug("Received unhandled message on server: "+request);
+        return null;
+        }
+
+    public Object visitSuccessfulAllocateResponse(
+        final SuccessfulAllocateResponse response)
+        {
+        LOG.error("Unexpected message received on server: "+response);
+        return null;
+        }
+
+    public Object visitConnectionStatusIndication(
+        final ConnectionStatusIndication indication)
+        {
+        LOG.error("Unexpected message received on server: "+indication);
+        return null;
+        }
+    
+    public Object visitSuccessfulBindingResponse(
+        final SuccessfulBindingResponse response)
         {
         LOG.error("We should not get binding responses on the server");
+        return null;
         }
 
-
-
-    public void visitAllocateRequest(final AllocateRequest request)
+    public Object visitNullMessage(final NullStunMessage message)
         {
-        LOG.trace("Processing allocate request...");
-
-        }
-
-    public void visitSendIndication(final SendIndication request)
-        {
-        // TODO Auto-generated method stub
-        
-        }
-
-    public void visitDataIndication(DataIndication data)
-        {
-        // TODO Auto-generated method stub
-        
-        }
-
-    public void visitSuccessfulAllocateResponse(SuccessfulAllocateResponse response)
-        {
-        // TODO Auto-generated method stub
-        
-        }
-
-    public void visitConnectRequest(ConnectRequest request)
-        {
-        // TODO Auto-generated method stub
-        
-        }
-
-    public void visitConnectionStatusIndication(ConnectionStatusIndication indication)
-        {
-        // TODO Auto-generated method stub
-        
+        LOG.error("Received null message on the server");
+        return null;
         }
 
     }
