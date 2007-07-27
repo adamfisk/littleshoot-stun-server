@@ -10,7 +10,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.mina.common.ByteBuffer;
 import org.apache.mina.common.IoAcceptor;
-import org.apache.mina.common.IoAcceptorConfig;
 import org.apache.mina.common.IoHandler;
 import org.apache.mina.common.IoService;
 import org.apache.mina.common.IoServiceConfig;
@@ -58,7 +57,8 @@ public class StunServerImpl implements StunServer, IoServiceListener
         final ExecutorService executor = Executors.newCachedThreadPool();
         final IoAcceptor acceptor = new DatagramAcceptor(executor);
         acceptor.addListener(this);
-        final IoAcceptorConfig config = new DatagramAcceptorConfig();
+        final DatagramAcceptorConfig config = new DatagramAcceptorConfig();
+        config.getSessionConfig().setReuseAddress(true);
         
         final ProtocolCodecFactory codecFactory = 
             new StunProtocolCodecFactory();
