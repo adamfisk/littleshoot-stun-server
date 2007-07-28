@@ -41,6 +41,14 @@ public class StunServerImpl implements StunServer, IoServiceListener
 
     /**
      * Creates a new STUN server.
+     */
+    public StunServerImpl()
+        {
+        this(new StunServerMessageVisitorFactory());
+        }
+    
+    /**
+     * Creates a new STUN server.
      * 
      * @param visitorFactory The factory for creating classes for visiting 
      * STUN messages and handling them appropriately as they're read.
