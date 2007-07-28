@@ -41,6 +41,7 @@ public class StunServerMessageVisitor implements StunMessageVisitor<Object>
 
     public Object visitBindingRequest(final BindingRequest binding)
         {
+        LOG.debug("STUN server visiting binding request...");
         final InetSocketAddress address = 
             (InetSocketAddress) m_session.getRemoteAddress();
         
