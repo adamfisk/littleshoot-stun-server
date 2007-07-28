@@ -19,6 +19,7 @@ import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.filter.executor.ExecutorFilter;
 import org.apache.mina.transport.socket.nio.DatagramAcceptor;
 import org.apache.mina.transport.socket.nio.DatagramAcceptorConfig;
+import org.lastbamboo.common.stun.stack.StunIoHandler;
 import org.lastbamboo.common.stun.stack.decoder.StunProtocolCodecFactory;
 import org.lastbamboo.common.stun.stack.message.StunMessageVisitorFactory;
 import org.lastbamboo.common.util.NetworkUtils;
@@ -87,8 +88,7 @@ public class StunServerImpl implements StunServer, IoServiceListener
         config.getFilterChain().addLast("stunFilter", codecFilter);
         config.getFilterChain().addLast("executor", 
             new ExecutorFilter(executor));
-        final IoHandler handler = 
-            new StunServerIoHandler(this.m_visitorFactory);
+        final IoHandler handler = new StunIoHandler(this.m_visitorFactory);
         
         try
             {
