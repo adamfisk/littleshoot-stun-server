@@ -8,6 +8,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.apache.mina.common.ByteBuffer;
+import org.apache.mina.common.ExecutorThreadModel;
 import org.apache.mina.common.IoHandler;
 import org.apache.mina.common.IoService;
 import org.apache.mina.common.IoServiceConfig;
@@ -44,12 +45,14 @@ public class StunServerImpl implements StunServer, IoServiceListener
 
     private InetSocketAddress m_boundAddress;
 
+    private final String m_threadName;
+
     /**
      * Creates a new STUN server.
      */
     public StunServerImpl()
         {
-        this(new StunServerMessageVisitorFactory());
+        this(new StunServerMessageVisitorFactory(), "");
         }
     
     /**
@@ -60,9 +63,24 @@ public class StunServerImpl implements StunServer, IoServiceListener
      */
     public StunServerImpl(final StunMessageVisitorFactory visitorFactory)
         {
+        this(visitorFactory, "");
+        }
+    
+    /**
+     * Creates a new STUN server.
+     * 
+     * @param visitorFactory The factory for creating classes for visiting 
+     * STUN messages and handling them appropriately as they're read.
+     * @param threadName Additional string for thread naming to make 
+     * debugging easier.
+     */
+    public StunServerImpl(final StunMessageVisitorFactory visitorFactory, 
+        final String threadName)
+        {
         m_visitorFactory = visitorFactory;
         ByteBuffer.setUseDirectBuffers(false);
         ByteBuffer.setAllocator(new SimpleByteBufferAllocator());
+        this.m_threadName = threadName;
         }
     
     public void start()
@@ -80,6 +98,8 @@ public class StunServerImpl implements StunServer, IoServiceListener
         acceptor.addListener(this);
         final DatagramAcceptorConfig config = new DatagramAcceptorConfig();
         config.getSessionConfig().setReuseAddress(true);
+        config.setThreadModel(
+            ExecutorThreadModel.getInstance("STUN Server: "+this.m_threadName));
         
         final ProtocolCodecFactory codecFactory = 
             new StunProtocolCodecFactory();
