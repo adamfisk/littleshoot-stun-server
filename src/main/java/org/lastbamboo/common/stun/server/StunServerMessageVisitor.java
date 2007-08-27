@@ -6,19 +6,10 @@ import org.apache.commons.id.uuid.UUID;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.mina.common.IoSession;
-import org.lastbamboo.common.stun.stack.message.BindingErrorResponse;
 import org.lastbamboo.common.stun.stack.message.BindingRequest;
-import org.lastbamboo.common.stun.stack.message.NullStunMessage;
-import org.lastbamboo.common.stun.stack.message.StunMessage;
-import org.lastbamboo.common.stun.stack.message.StunMessageVisitor;
 import org.lastbamboo.common.stun.stack.message.BindingSuccessResponse;
+import org.lastbamboo.common.stun.stack.message.StunMessage;
 import org.lastbamboo.common.stun.stack.message.StunMessageVisitorAdapter;
-import org.lastbamboo.common.stun.stack.message.turn.AllocateRequest;
-import org.lastbamboo.common.stun.stack.message.turn.ConnectRequest;
-import org.lastbamboo.common.stun.stack.message.turn.ConnectionStatusIndication;
-import org.lastbamboo.common.stun.stack.message.turn.DataIndication;
-import org.lastbamboo.common.stun.stack.message.turn.SendIndication;
-import org.lastbamboo.common.stun.stack.message.turn.AllocateSuccessResponse;
 
 /**
  * Class that visits read messages on a STUN server.
