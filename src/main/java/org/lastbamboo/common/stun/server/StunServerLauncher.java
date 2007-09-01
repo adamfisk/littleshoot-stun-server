@@ -33,7 +33,7 @@ public class StunServerLauncher
         {
         final StunMessageVisitorFactory messageVisitorFactory = 
             new StunServerMessageVisitorFactory();
-        final StunServer server = new StunServerImpl(messageVisitorFactory);
+        final StunServer server = new UdpStunServer(messageVisitorFactory);
         server.start();
         }
 

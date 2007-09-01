@@ -30,27 +30,27 @@ import org.slf4j.LoggerFactory;
 /**
  * Implementation of a STUN server.
  */
-public class StunServerImpl implements StunServer, IoServiceListener
+public abstract class AbstractStunServer implements StunServer, IoServiceListener
     {
 
     private static final Logger LOG = 
-        LoggerFactory.getLogger(StunServerImpl.class);
+        LoggerFactory.getLogger(UdpStunServer.class);
     
     /**
      * Use the default STUN port.
      */
     private static final int STUN_PORT = 3478;
 
-    private final StunMessageVisitorFactory m_visitorFactory;
+    protected final StunMessageVisitorFactory m_visitorFactory;
 
     private InetSocketAddress m_boundAddress;
 
-    private final String m_threadName;
+    protected final String m_threadName;
 
     /**
      * Creates a new STUN server.
      */
-    public StunServerImpl()
+    public AbstractStunServer()
         {
         this(new StunServerMessageVisitorFactory(), "");
         }
@@ -61,7 +61,7 @@ public class StunServerImpl implements StunServer, IoServiceListener
      * @param visitorFactory The factory for creating classes for visiting 
      * STUN messages and handling them appropriately as they're read.
      */
-    public StunServerImpl(final StunMessageVisitorFactory visitorFactory)
+    public AbstractStunServer(final StunMessageVisitorFactory visitorFactory)
         {
         this(visitorFactory, "");
         }
@@ -74,7 +74,7 @@ public class StunServerImpl implements StunServer, IoServiceListener
      * @param threadName Additional string for thread naming to make 
      * debugging easier.
      */
-    public StunServerImpl(final StunMessageVisitorFactory visitorFactory, 
+    public AbstractStunServer(final StunMessageVisitorFactory visitorFactory, 
         final String threadName)
         {
         m_visitorFactory = visitorFactory;
@@ -85,7 +85,14 @@ public class StunServerImpl implements StunServer, IoServiceListener
     
     public void start()
         {
-        start(new InetSocketAddress(STUN_PORT));
+        try
+            {
+            start(new InetSocketAddress(NetworkUtils.getLocalHost(),STUN_PORT));
+            }
+        catch (final UnknownHostException e)
+            {
+            LOG.error("Could not get the local address", e);
+            }
         }
     
     public void start(final InetSocketAddress bindAddress)
@@ -93,6 +100,7 @@ public class StunServerImpl implements StunServer, IoServiceListener
         final InetSocketAddress bindAddressToUse = 
             createBindAddress(bindAddress);
 
+        bind(bindAddressToUse);
         final ExecutorService executor = Executors.newCachedThreadPool();
         final DatagramAcceptor acceptor = new DatagramAcceptor(executor);
         acceptor.addListener(this);
@@ -120,17 +128,16 @@ public class StunServerImpl implements StunServer, IoServiceListener
             LOG.error("Could not bind server", e);
             }
         }
+    
+    protected abstract void bind(final InetSocketAddress bindAddress);
 
-    private InetSocketAddress createBindAddress(
+    private static InetSocketAddress createBindAddress(
         final InetSocketAddress bindAddress)
         {
         if (bindAddress == null)
             {
             try
                 {
-                // This will tell the kernel to choose a port.  I haven't seen
-                // specific documentation on this, but that's what it appears 
-                // to do, at least on OSX.
                 return new InetSocketAddress(NetworkUtils.getLocalHost(), 0);
                 }
             catch (UnknownHostException e)
