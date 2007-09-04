@@ -18,27 +18,8 @@ import org.slf4j.LoggerFactory;
 public class TcpStunServer extends AbstractStunServer
     {
 
-    private static final Logger LOG = 
+    private final Logger m_log = 
         LoggerFactory.getLogger(TcpStunServer.class);
-    
-    /**
-     * Creates a new STUN server.
-     */
-    public TcpStunServer()
-        {
-        this(new StunServerMessageVisitorFactory(), "");
-        }
-    
-    /**
-     * Creates a new STUN server.
-     * 
-     * @param visitorFactory The factory for creating classes for visiting 
-     * STUN messages and handling them appropriately as they're read.
-     */
-    public TcpStunServer(final StunMessageVisitorFactory visitorFactory)
-        {
-        this(visitorFactory, "");
-        }
     
     /**
      * Creates a new STUN server.
@@ -59,9 +40,12 @@ public class TcpStunServer extends AbstractStunServer
         {
         final ProtocolCodecFactory codecFactory = 
             new StunProtocolCodecFactory();
+        
         final IoHandler handler = new StunIoHandler(this.m_visitorFactory);
         final MinaServer server = new MinaTcpServer(codecFactory, this, 
-            handler, bindAddress.getPort(), "TCP-STUN-Server");
+            handler, bindAddress.getPort(), 
+            "TCP-STUN-Server-" + this.m_threadName);
+        m_log.debug("Running STUN TCP server on: {}", bindAddress);
         server.start();
         }
 
