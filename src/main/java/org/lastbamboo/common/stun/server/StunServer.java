@@ -2,6 +2,8 @@ package org.lastbamboo.common.stun.server;
 
 import java.net.InetSocketAddress;
 
+import org.apache.mina.common.IoServiceListener;
+
 /**
  * Interface for starting a STUN server.
  */
@@ -27,5 +29,7 @@ public interface StunServer
      * @return The address the server is bound to.
      */
     InetSocketAddress getBoundAddress();
+
+    void addIoServiceListener(IoServiceListener serviceListener);
 
     }

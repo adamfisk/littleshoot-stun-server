@@ -18,7 +18,7 @@ public class StunServerMessageVisitorFactory implements
         }
 
     public StunMessageVisitor createVisitor(final IoSession session, 
-        final StreamIoHandler streamHandler)
+        final Object attachment)
         {
         return new StunServerMessageVisitor(session);
         }

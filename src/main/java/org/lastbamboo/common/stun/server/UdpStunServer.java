@@ -2,11 +2,11 @@ package org.lastbamboo.common.stun.server;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.apache.mina.common.ExecutorThreadModel;
 import org.apache.mina.common.IoHandler;
+import org.apache.mina.common.IoServiceListener;
 import org.apache.mina.filter.codec.ProtocolCodecFactory;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.filter.executor.ExecutorFilter;
@@ -26,6 +26,8 @@ public class UdpStunServer extends AbstractStunServer
 
     private static final Logger LOG = 
         LoggerFactory.getLogger(UdpStunServer.class);
+    private final DatagramAcceptor m_acceptor = 
+        new DatagramAcceptor(Executors.newCachedThreadPool());
     
     /**
      * Creates a new STUN server.
@@ -63,9 +65,7 @@ public class UdpStunServer extends AbstractStunServer
     @Override
     protected void bind(InetSocketAddress bindAddress)
         {
-        final ExecutorService executor = Executors.newCachedThreadPool();
-        final DatagramAcceptor acceptor = new DatagramAcceptor(executor);
-        acceptor.addListener(this);
+        m_acceptor.addListener(this);
         final DatagramAcceptorConfig config = new DatagramAcceptorConfig();
         config.getSessionConfig().setReuseAddress(true);
         config.setThreadModel(
@@ -77,18 +77,23 @@ public class UdpStunServer extends AbstractStunServer
             new ProtocolCodecFilter(codecFactory);
         config.getFilterChain().addLast("stunFilter", codecFilter);
         config.getFilterChain().addLast("executor", 
-            new ExecutorFilter(executor));
+            new ExecutorFilter(Executors.newCachedThreadPool()));
         final IoHandler handler = new StunIoHandler(this.m_visitorFactory);
         
         try
             {
-            acceptor.bind(bindAddress, handler, config);
+            m_acceptor.bind(bindAddress, handler, config);
             LOG.debug("Started STUN server!!");
             }
         catch (final IOException e)
             {
             LOG.error("Could not bind server", e);
             }
+        }
+
+    public void addIoServiceListener(final IoServiceListener serviceListener)
+        {
+        this.m_acceptor.addListener(serviceListener);
         }
 
     }
