@@ -95,5 +95,10 @@ public class UdpStunServer extends AbstractStunServer
         {
         this.m_acceptor.addListener(serviceListener);
         }
+    
+    public void close()
+        {
+        this.m_acceptor.unbindAll();
+        }
 
     }

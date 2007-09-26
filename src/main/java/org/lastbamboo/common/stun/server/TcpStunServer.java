@@ -58,4 +58,9 @@ public class TcpStunServer extends AbstractStunServer
         this.m_server.addIoServiceListener(serviceListener);
         }
 
+    
+    public void close()
+        {
+        this.m_server.stop();
+        }
     }

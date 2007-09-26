@@ -32,4 +32,6 @@ public interface StunServer
 
     void addIoServiceListener(IoServiceListener serviceListener);
 
+    void close();
+
     }
