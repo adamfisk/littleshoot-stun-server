@@ -20,7 +20,7 @@ public class TcpStunServer extends AbstractStunServer
 
     private final Logger m_log = 
         LoggerFactory.getLogger(TcpStunServer.class);
-    private final IoHandler m_ioHandler;
+    //private final IoHandler m_ioHandler;
     private final MinaTcpServer m_server;
     
     /**
@@ -33,14 +33,11 @@ public class TcpStunServer extends AbstractStunServer
      * @param threadName Additional string for thread naming to make 
      * debugging easier.
      */
-    public TcpStunServer(final IoHandler ioHandler, 
-        final StunMessageVisitorFactory messageVisitorFactory, 
-        final String threadName)
+    public TcpStunServer(final ProtocolCodecFactory codecFactory,
+        final IoHandler ioHandler, final String threadName)
         {
-        super(messageVisitorFactory, threadName);
-        this.m_ioHandler = ioHandler;
-        final ProtocolCodecFactory codecFactory = 
-            new StunProtocolCodecFactory();
+        super(codecFactory, ioHandler, threadName);
+        //this.m_ioHandler = ioHandler;
         
         this.m_server = new MinaTcpServer(codecFactory, this, 
             this.m_ioHandler, "TCP-STUN-Server-" + this.m_threadName);

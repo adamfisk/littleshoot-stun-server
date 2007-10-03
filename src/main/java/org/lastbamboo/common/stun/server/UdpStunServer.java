@@ -59,9 +59,16 @@ public class UdpStunServer extends AbstractStunServer
     public UdpStunServer(final StunMessageVisitorFactory visitorFactory, 
         final String threadName)
         {
-        super(visitorFactory, threadName);
+        this(new StunProtocolCodecFactory(), 
+            new StunIoHandler(visitorFactory), threadName);
         }
     
+    public UdpStunServer(final ProtocolCodecFactory codecFactory, 
+        final IoHandler ioHandler, final String threadName)
+        {
+        super(codecFactory, ioHandler, threadName);
+        }
+
     @Override
     protected void bind(InetSocketAddress bindAddress)
         {
@@ -69,20 +76,21 @@ public class UdpStunServer extends AbstractStunServer
         final DatagramAcceptorConfig config = new DatagramAcceptorConfig();
         config.getSessionConfig().setReuseAddress(true);
         config.setThreadModel(
-            ExecutorThreadModel.getInstance("STUN Server: "+this.m_threadName));
+            ExecutorThreadModel.getInstance(
+                getClass().getSimpleName()+this.m_threadName));
         
-        final ProtocolCodecFactory codecFactory = 
-            new StunProtocolCodecFactory();
+        //final ProtocolCodecFactory codecFactory = 
+          //  new StunProtocolCodecFactory();
         final ProtocolCodecFilter codecFilter = 
-            new ProtocolCodecFilter(codecFactory);
+            new ProtocolCodecFilter(this.m_codecFactory);
         config.getFilterChain().addLast("stunFilter", codecFilter);
         config.getFilterChain().addLast("executor", 
             new ExecutorFilter(Executors.newCachedThreadPool()));
-        final IoHandler handler = new StunIoHandler(this.m_visitorFactory);
+        //final IoHandler handler = new StunIoHandler(this.m_visitorFactory);
         
         try
             {
-            m_acceptor.bind(bindAddress, handler, config);
+            m_acceptor.bind(bindAddress, this.m_ioHandler, config);
             LOG.debug("Started STUN server!!");
             }
         catch (final IOException e)

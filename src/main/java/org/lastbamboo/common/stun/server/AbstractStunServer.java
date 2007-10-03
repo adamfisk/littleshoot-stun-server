@@ -11,6 +11,7 @@ import org.apache.mina.common.IoServiceConfig;
 import org.apache.mina.common.IoServiceListener;
 import org.apache.mina.common.IoSession;
 import org.apache.mina.common.SimpleByteBufferAllocator;
+import org.apache.mina.filter.codec.ProtocolCodecFactory;
 import org.lastbamboo.common.stun.stack.message.StunMessageVisitorFactory;
 import org.lastbamboo.common.util.NetworkUtils;
 import org.slf4j.Logger;
@@ -30,48 +31,26 @@ public abstract class AbstractStunServer implements StunServer, IoServiceListene
      */
     private static final int STUN_PORT = 3478;
 
-    protected final StunMessageVisitorFactory m_visitorFactory;
+    //protected final StunMessageVisitorFactory m_visitorFactory;
 
     private InetSocketAddress m_boundAddress;
 
     protected final String m_threadName;
 
-    /**
-     * Creates a new STUN server.
-     */
-    public AbstractStunServer()
-        {
-        this(new StunServerMessageVisitorFactory(), "");
-        }
+    protected final ProtocolCodecFactory m_codecFactory;
+
+    protected final IoHandler m_ioHandler;
     
-    /**
-     * Creates a new STUN server.
-     * 
-     * @param visitorFactory The factory for creating classes for visiting 
-     * STUN messages and handling them appropriately as they're read.
-     */
-    public AbstractStunServer(final StunMessageVisitorFactory visitorFactory)
-        {
-        this(visitorFactory, "");
-        }
-    
-    /**
-     * Creates a new STUN server.
-     * 
-     * @param visitorFactory The factory for creating classes for visiting 
-     * STUN messages and handling them appropriately as they're read.
-     * @param threadName Additional string for thread naming to make 
-     * debugging easier.
-     */
-    public AbstractStunServer(final StunMessageVisitorFactory visitorFactory, 
-        final String threadName)
+    public AbstractStunServer(final ProtocolCodecFactory codecFactory, 
+        final IoHandler ioHandler, final String threadName)
         {
         ByteBuffer.setUseDirectBuffers(false);
         ByteBuffer.setAllocator(new SimpleByteBufferAllocator());
-        m_visitorFactory = visitorFactory;
-        this.m_threadName = threadName;
+        m_codecFactory = codecFactory;
+        m_ioHandler = ioHandler;
+        m_threadName = threadName;
         }
-    
+
     public void start()
         {
         try
