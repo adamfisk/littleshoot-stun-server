@@ -6,8 +6,6 @@ import org.apache.mina.common.IoHandler;
 import org.apache.mina.common.IoServiceListener;
 import org.apache.mina.common.IoSession;
 import org.apache.mina.filter.codec.ProtocolCodecFactory;
-import org.lastbamboo.common.stun.stack.StunProtocolCodecFactory;
-import org.lastbamboo.common.stun.stack.message.StunMessageVisitorFactory;
 import org.lastbamboo.common.util.mina.MinaTcpServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +18,6 @@ public class TcpStunServer extends AbstractStunServer
 
     private final Logger m_log = 
         LoggerFactory.getLogger(TcpStunServer.class);
-    //private final IoHandler m_ioHandler;
     private final MinaTcpServer m_server;
     
     /**
@@ -28,8 +25,6 @@ public class TcpStunServer extends AbstractStunServer
      * 
      * @param ioHandler The {@link IoHandler} to use for processing messages
      * and {@link IoSession}s. 
-     * @param messageVisitorFactory The factory for creating classes for 
-     * visiting STUN messages and handling them appropriately as they're read.
      * @param threadName Additional string for thread naming to make 
      * debugging easier.
      */
@@ -37,10 +32,9 @@ public class TcpStunServer extends AbstractStunServer
         final IoHandler ioHandler, final String threadName)
         {
         super(codecFactory, ioHandler, threadName);
-        //this.m_ioHandler = ioHandler;
         
         this.m_server = new MinaTcpServer(codecFactory, this, 
-            this.m_ioHandler, "TCP-STUN-Server-" + this.m_threadName);
+            ioHandler, "TCP-STUN-Server-" + threadName);
         }
 
     @Override
@@ -50,7 +44,7 @@ public class TcpStunServer extends AbstractStunServer
         m_server.start(bindAddress.getPort());
         }
 
-    public void addIoServiceListener(IoServiceListener serviceListener)
+    public void addIoServiceListener(final IoServiceListener serviceListener)
         {
         this.m_server.addIoServiceListener(serviceListener);
         }
