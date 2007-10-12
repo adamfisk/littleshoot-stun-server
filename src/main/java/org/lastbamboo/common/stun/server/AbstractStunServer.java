@@ -12,7 +12,6 @@ import org.apache.mina.common.IoServiceListener;
 import org.apache.mina.common.IoSession;
 import org.apache.mina.common.SimpleByteBufferAllocator;
 import org.apache.mina.filter.codec.ProtocolCodecFactory;
-import org.lastbamboo.common.stun.stack.message.StunMessageVisitorFactory;
 import org.lastbamboo.common.util.NetworkUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,8 +29,6 @@ public abstract class AbstractStunServer implements StunServer, IoServiceListene
      * Use the default STUN port.
      */
     private static final int STUN_PORT = 3478;
-
-    //protected final StunMessageVisitorFactory m_visitorFactory;
 
     private InetSocketAddress m_boundAddress;
 
