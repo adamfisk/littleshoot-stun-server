@@ -31,14 +31,6 @@ public class UdpStunServer extends AbstractStunServer
     
     /**
      * Creates a new STUN server.
-     */
-    public UdpStunServer()
-        {
-        this(new StunServerMessageVisitorFactory(), "");
-        }
-    
-    /**
-     * Creates a new STUN server.
      * 
      * @param visitorFactory The factory for creating classes for visiting 
      * STUN messages and handling them appropriately as they're read.
@@ -56,7 +48,7 @@ public class UdpStunServer extends AbstractStunServer
      * @param threadName Additional string for thread naming to make 
      * debugging easier.
      */
-    public UdpStunServer(final StunMessageVisitorFactory visitorFactory, 
+    private UdpStunServer(final StunMessageVisitorFactory visitorFactory, 
         final String threadName)
         {
         this(new StunProtocolCodecFactory(), 
