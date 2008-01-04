@@ -29,15 +29,10 @@ public class UdpStunServer extends AbstractStunServer
     private final DatagramAcceptor m_acceptor = 
         new DatagramAcceptor(Executors.newCachedThreadPool());
     
-    /**
-     * Creates a new STUN server.
-     * 
-     * @param visitorFactory The factory for creating classes for visiting 
-     * STUN messages and handling them appropriately as they're read.
-     */
-    public UdpStunServer(final StunMessageVisitorFactory visitorFactory)
+    public UdpStunServer(final ProtocolCodecFactory codecFactory, 
+        final IoHandler ioHandler, final String threadName)
         {
-        this(visitorFactory, "");
+        super(codecFactory, ioHandler, threadName);
         }
     
     /**
@@ -48,21 +43,15 @@ public class UdpStunServer extends AbstractStunServer
      * @param threadName Additional string for thread naming to make 
      * debugging easier.
      */
-    private UdpStunServer(final StunMessageVisitorFactory visitorFactory, 
+    public UdpStunServer(final StunMessageVisitorFactory visitorFactory, 
         final String threadName)
         {
         this(new StunProtocolCodecFactory(), 
             new StunIoHandler(visitorFactory), threadName);
         }
     
-    public UdpStunServer(final ProtocolCodecFactory codecFactory, 
-        final IoHandler ioHandler, final String threadName)
-        {
-        super(codecFactory, ioHandler, threadName);
-        }
-
     @Override
-    protected void bind(InetSocketAddress bindAddress)
+    protected void bind(final InetSocketAddress bindAddress)
         {
         m_acceptor.addListener(this);
         final DatagramAcceptorConfig config = new DatagramAcceptorConfig();
@@ -71,14 +60,11 @@ public class UdpStunServer extends AbstractStunServer
             ExecutorThreadModel.getInstance(
                 getClass().getSimpleName()+this.m_threadName));
         
-        //final ProtocolCodecFactory codecFactory = 
-          //  new StunProtocolCodecFactory();
         final ProtocolCodecFilter codecFilter = 
             new ProtocolCodecFilter(this.m_codecFactory);
         config.getFilterChain().addLast("stunFilter", codecFilter);
         config.getFilterChain().addLast("executor", 
             new ExecutorFilter(Executors.newCachedThreadPool()));
-        //final IoHandler handler = new StunIoHandler(this.m_visitorFactory);
         
         try
             {
