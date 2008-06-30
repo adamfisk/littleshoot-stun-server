@@ -19,7 +19,8 @@ import org.slf4j.LoggerFactory;
 /**
  * Implementation of a STUN server.
  */
-public abstract class AbstractStunServer implements StunServer, IoServiceListener
+public abstract class AbstractStunServer implements StunServer, 
+    IoServiceListener
     {
 
     private static final Logger LOG = 
@@ -38,6 +39,14 @@ public abstract class AbstractStunServer implements StunServer, IoServiceListene
 
     protected final IoHandler m_ioHandler;
     
+    /**
+     * Creates a new STUN server.
+     * 
+     * @param codecFactory The factory for creating STUN codecs.
+     * @param ioHandler The IO handler, often a demuxing handler that
+     * demultiplexes STUN with the media protocol.
+     * @param threadName The name of the thread to use.
+     */
     public AbstractStunServer(final ProtocolCodecFactory codecFactory, 
         final IoHandler ioHandler, final String threadName)
         {
@@ -111,18 +120,18 @@ public abstract class AbstractStunServer implements StunServer, IoServiceListene
         final SocketAddress serviceAddress, final IoHandler handler, 
         final IoServiceConfig config)
         {
+        LOG.debug("Session deactivated on service address: {}",
+            serviceAddress);
         }
 
-    public void sessionCreated(IoSession session)
+    public void sessionCreated(final IoSession session)
         {
-        // TODO Auto-generated method stub
-        
+        LOG.debug("Session created: {}", session);
         }
 
-    public void sessionDestroyed(IoSession session)
+    public void sessionDestroyed(final IoSession session)
         {
-        // TODO Auto-generated method stub
-        
+        LOG.debug("Session destroyed: {}", session);
         }
 
     }
