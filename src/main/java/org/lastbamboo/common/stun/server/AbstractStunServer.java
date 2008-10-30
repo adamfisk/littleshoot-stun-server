@@ -1,5 +1,6 @@
 package org.lastbamboo.common.stun.server;
 
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.UnknownHostException;
@@ -57,19 +58,12 @@ public abstract class AbstractStunServer implements StunServer,
         m_threadName = threadName;
         }
 
-    public void start()
+    public void start() throws IOException
         {
-        try
-            {
-            start(new InetSocketAddress(NetworkUtils.getLocalHost(),STUN_PORT));
-            }
-        catch (final UnknownHostException e)
-            {
-            LOG.error("Could not get the local address", e);
-            }
+        start(new InetSocketAddress(NetworkUtils.getLocalHost(),STUN_PORT));
         }
     
-    public void start(final InetSocketAddress bindAddress)
+    public void start(final InetSocketAddress bindAddress) throws IOException
         {
         final InetSocketAddress bindAddressToUse = 
             createBindAddress(bindAddress);
@@ -77,7 +71,8 @@ public abstract class AbstractStunServer implements StunServer,
         bind(bindAddressToUse);
         }
     
-    protected abstract void bind(final InetSocketAddress bindAddress);
+    protected abstract void bind(final InetSocketAddress bindAddress) 
+        throws IOException;
 
     private static InetSocketAddress createBindAddress(
         final InetSocketAddress bindAddress)

@@ -1,5 +1,6 @@
 package org.lastbamboo.common.stun.server;
 
+import java.io.IOException;
 import java.net.InetSocketAddress;
 
 import org.apache.mina.common.IoHandler;
@@ -38,7 +39,7 @@ public class TcpStunServer extends AbstractStunServer
         }
 
     @Override
-    protected void bind(final InetSocketAddress bindAddress)
+    protected void bind(final InetSocketAddress bindAddress) throws IOException
         {
         m_log.debug("Running STUN TCP server on: {}", bindAddress);
         m_server.start(bindAddress.getPort());
