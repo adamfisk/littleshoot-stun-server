@@ -29,6 +29,14 @@ public class UdpStunServer extends AbstractStunServer
     private final DatagramAcceptor m_acceptor = 
         new DatagramAcceptor(Executors.newCachedThreadPool());
     
+    /**
+     * Creates a new STUN server.
+     * 
+     * @param codecFactory The class for creating codec handlers. 
+     * @param ioHandler The class for processing STUN I/O events.
+     * @param threadName Additional string for thread naming to make 
+     * debugging easier.
+     */
     public UdpStunServer(final ProtocolCodecFactory codecFactory, 
         final IoHandler ioHandler, final String threadName)
         {
