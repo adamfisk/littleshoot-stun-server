@@ -74,9 +74,6 @@ public class UdpStunServer extends AbstractStunServer
         final DatagramAcceptorConfig config = m_acceptor.getDefaultConfig();
         config.setThreadModel(ThreadModel.MANUAL);
         config.getSessionConfig().setReuseAddress(true);
-        //config.setThreadModel(
-         //   ExecutorThreadModel.getInstance(
-         //       getClass().getSimpleName()+this.m_threadName));
         
         final ProtocolCodecFilter codecFilter = 
             new ProtocolCodecFilter(this.m_codecFactory);

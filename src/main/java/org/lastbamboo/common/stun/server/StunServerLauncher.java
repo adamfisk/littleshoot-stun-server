@@ -2,9 +2,11 @@ package org.lastbamboo.common.stun.server;
 
 import java.io.IOException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.mina.common.ByteBuffer;
+import org.apache.mina.common.SimpleByteBufferAllocator;
 import org.lastbamboo.common.stun.stack.message.StunMessageVisitorFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Launches the STUN server.
@@ -12,7 +14,8 @@ import org.lastbamboo.common.stun.stack.message.StunMessageVisitorFactory;
 public class StunServerLauncher
     {
 
-    private static final Log LOG = LogFactory.getLog(StunServerLauncher.class);
+    private static final Logger LOG = 
+        LoggerFactory.getLogger(StunServerLauncher.class);
     
     /**
      * Launches the STUN server.
@@ -22,6 +25,8 @@ public class StunServerLauncher
     public static void main(final String[] args)
         {
         LOG.debug("Launching SIP and TURN servers...");
+        ByteBuffer.setUseDirectBuffers(false);
+        ByteBuffer.setAllocator(new SimpleByteBufferAllocator());
         final StunServerLauncher launcher = new StunServerLauncher();
         LOG.debug("Created launcher");
         try
@@ -46,6 +51,19 @@ public class StunServerLauncher
         final StunServer server = 
             new UdpStunServer(messageVisitorFactory, "UDP-STUN-Server");
         server.start();
+        
+        // Just keep the thread open.
+        try
+            {
+            synchronized (this)
+                {
+                wait();
+                }
+            }
+        catch (final InterruptedException e)
+            {
+            LOG.debug("Unexpected interrupt", e);
+            }
         }
 
     }
