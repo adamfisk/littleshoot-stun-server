@@ -51,6 +51,10 @@
                 <artifactId>lastbamboo-maven-plugin</artifactId>
                 <configuration>
                     <bundleName>LittleShoot</bundleName>
+                    <javaArgs>
+                        <param>-server</param>
+                        <param>-Xmx300m</param>
+                        </javaArgs>
                     <mainClass>
                         org.lastbamboo.common.stun.server.StunServerLauncher
                         </mainClass>
