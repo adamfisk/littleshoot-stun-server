@@ -62,7 +62,7 @@ public class StunServerLauncher
             }
         catch (final InterruptedException e)
             {
-            LOG.debug("Unexpected interrupt", e);
+            LOG.debug("Got interrupt -- CTR-Ced?", e);
             }
         }
 
