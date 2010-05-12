@@ -1,7 +1,6 @@
 package org.lastbamboo.common.stun.server;
 
 import org.apache.mina.common.IoSession;
-import org.apache.mina.handler.StreamIoHandler;
 import org.lastbamboo.common.stun.stack.message.StunMessageVisitor;
 import org.lastbamboo.common.stun.stack.message.StunMessageVisitorFactory;
 
