@@ -3,7 +3,7 @@ package org.lastbamboo.common.stun.server;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
-import org.apache.mina.common.IoServiceListener;
+import org.littleshoot.mina.common.IoServiceListener;
 
 /**
  * Interface for starting a STUN server.

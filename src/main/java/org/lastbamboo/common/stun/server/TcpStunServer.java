@@ -3,10 +3,10 @@ package org.lastbamboo.common.stun.server;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
-import org.apache.mina.common.IoHandler;
-import org.apache.mina.common.IoServiceListener;
-import org.apache.mina.common.IoSession;
-import org.apache.mina.filter.codec.ProtocolCodecFactory;
+import org.littleshoot.mina.common.IoHandler;
+import org.littleshoot.mina.common.IoServiceListener;
+import org.littleshoot.mina.common.IoSession;
+import org.littleshoot.mina.filter.codec.ProtocolCodecFactory;
 import org.lastbamboo.common.util.mina.MinaTcpServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

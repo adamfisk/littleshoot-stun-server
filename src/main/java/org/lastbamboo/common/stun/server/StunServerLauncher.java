@@ -2,8 +2,8 @@ package org.lastbamboo.common.stun.server;
 
 import java.io.IOException;
 
-import org.apache.mina.common.ByteBuffer;
-import org.apache.mina.common.SimpleByteBufferAllocator;
+import org.littleshoot.mina.common.ByteBuffer;
+import org.littleshoot.mina.common.SimpleByteBufferAllocator;
 import org.lastbamboo.common.stun.stack.message.StunMessageVisitorFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
