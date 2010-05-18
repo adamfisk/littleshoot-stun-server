@@ -3,8 +3,8 @@ package org.lastbamboo.common.stun.server;
 import java.net.InetSocketAddress;
 
 import org.apache.commons.id.uuid.UUID;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.littleshoot.mina.common.IoSession;
 import org.lastbamboo.common.stun.stack.message.BindingRequest;
 import org.lastbamboo.common.stun.stack.message.BindingSuccessResponse;
@@ -17,8 +17,7 @@ import org.lastbamboo.common.stun.stack.message.StunMessageVisitorAdapter;
 public class StunServerMessageVisitor extends StunMessageVisitorAdapter<Object>
     {
 
-    private static final Log LOG = 
-        LogFactory.getLog(StunServerMessageVisitor.class);
+    private final Logger LOG = LoggerFactory.getLogger(StunServerMessageVisitor.class);
     
     private final IoSession m_session;
 
