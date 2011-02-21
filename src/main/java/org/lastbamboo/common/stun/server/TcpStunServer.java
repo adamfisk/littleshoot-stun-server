@@ -7,7 +7,7 @@ import org.littleshoot.mina.common.IoHandler;
 import org.littleshoot.mina.common.IoServiceListener;
 import org.littleshoot.mina.common.IoSession;
 import org.littleshoot.mina.filter.codec.ProtocolCodecFactory;
-import org.lastbamboo.common.util.mina.MinaTcpServer;
+import org.littleshoot.util.mina.MinaTcpServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

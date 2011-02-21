@@ -16,7 +16,7 @@ import org.littleshoot.mina.transport.socket.nio.DatagramAcceptorConfig;
 import org.lastbamboo.common.stun.stack.StunIoHandler;
 import org.lastbamboo.common.stun.stack.StunProtocolCodecFactory;
 import org.lastbamboo.common.stun.stack.message.StunMessageVisitorFactory;
-import org.lastbamboo.common.util.DaemonThreadFactory;
+import org.littleshoot.util.DaemonThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

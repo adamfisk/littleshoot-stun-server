@@ -13,7 +13,7 @@ import org.littleshoot.mina.common.IoServiceListener;
 import org.littleshoot.mina.common.IoSession;
 import org.littleshoot.mina.common.SimpleByteBufferAllocator;
 import org.littleshoot.mina.filter.codec.ProtocolCodecFactory;
-import org.lastbamboo.common.util.NetworkUtils;
+import org.littleshoot.util.NetworkUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
