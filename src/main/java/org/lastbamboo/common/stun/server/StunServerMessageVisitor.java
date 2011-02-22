@@ -6,10 +6,10 @@ import org.apache.commons.id.uuid.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.littleshoot.mina.common.IoSession;
-import org.lastbamboo.common.stun.stack.message.BindingRequest;
-import org.lastbamboo.common.stun.stack.message.BindingSuccessResponse;
-import org.lastbamboo.common.stun.stack.message.StunMessage;
-import org.lastbamboo.common.stun.stack.message.StunMessageVisitorAdapter;
+import org.littleshoot.stun.stack.message.BindingRequest;
+import org.littleshoot.stun.stack.message.BindingSuccessResponse;
+import org.littleshoot.stun.stack.message.StunMessage;
+import org.littleshoot.stun.stack.message.StunMessageVisitorAdapter;
 
 /**
  * Class that visits read messages on a STUN server.

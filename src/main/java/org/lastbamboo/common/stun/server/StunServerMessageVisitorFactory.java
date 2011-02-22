@@ -1,8 +1,8 @@
 package org.lastbamboo.common.stun.server;
 
 import org.littleshoot.mina.common.IoSession;
-import org.lastbamboo.common.stun.stack.message.StunMessageVisitor;
-import org.lastbamboo.common.stun.stack.message.StunMessageVisitorFactory;
+import org.littleshoot.stun.stack.message.StunMessageVisitor;
+import org.littleshoot.stun.stack.message.StunMessageVisitorFactory;
 
 /**
  * Class for creating STUN message visitors on the server side. 

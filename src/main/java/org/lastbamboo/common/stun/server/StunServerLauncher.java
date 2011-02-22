@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import org.littleshoot.mina.common.ByteBuffer;
 import org.littleshoot.mina.common.SimpleByteBufferAllocator;
-import org.lastbamboo.common.stun.stack.message.StunMessageVisitorFactory;
+import org.littleshoot.stun.stack.message.StunMessageVisitorFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
