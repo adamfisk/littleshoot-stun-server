@@ -23,15 +23,15 @@ import org.slf4j.LoggerFactory;
 /**
  * Implementation of a STUN server.
  */
-public class UdpStunServer extends AbstractStunServer
-    {
+public class UdpStunServer extends AbstractStunServer {
 
-    private static final Logger LOG = 
-        LoggerFactory.getLogger(UdpStunServer.class);
-    
-    private final ExecutorService m_threadPool;
-    
-    private final DatagramAcceptor m_acceptor;
+    private final Logger log = LoggerFactory.getLogger(getClass());
+
+    private final ExecutorService threadPool;
+
+    private final DatagramAcceptor acceptor;
+
+    private InetSocketAddress bindAddress;
     
     /**
      * Creates a new STUN server.
@@ -41,14 +41,13 @@ public class UdpStunServer extends AbstractStunServer
      * @param threadName Additional string for thread naming to make 
      * debugging easier.
      */
-    public UdpStunServer(final ProtocolCodecFactory codecFactory, 
-        final IoHandler ioHandler, final String threadName)
-        {
+    public UdpStunServer(final ProtocolCodecFactory codecFactory,
+            final IoHandler ioHandler, final String threadName) {
         super(codecFactory, ioHandler, threadName);
-        m_threadPool = Executors.newCachedThreadPool(
-            new DaemonThreadFactory("UDP-STUN-Server-Thread-Pool-"+threadName));
-        m_acceptor = new DatagramAcceptor(m_threadPool);
-        }
+        threadPool = Executors.newCachedThreadPool(new DaemonThreadFactory(
+                "UDP-STUN-Server-Thread-Pool-" + threadName));
+        acceptor = new DatagramAcceptor(threadPool);
+    }
     
     /**
      * Creates a new STUN server.
@@ -58,48 +57,43 @@ public class UdpStunServer extends AbstractStunServer
      * @param threadName Additional string for thread naming to make 
      * debugging easier.
      */
-    public UdpStunServer(final StunMessageVisitorFactory visitorFactory, 
-        final String threadName)
-        {
-        this(new StunProtocolCodecFactory(), 
-            new StunIoHandler(visitorFactory), threadName);
-        }
-    
-    @Override
-    protected void bind(final InetSocketAddress bindAddress)
-        {
-        m_acceptor.addListener(this);
-        
+    public UdpStunServer(final StunMessageVisitorFactory visitorFactory,
+            final String threadName) {
+        this(new StunProtocolCodecFactory(), new StunIoHandler(visitorFactory),
+                threadName);
+    }
 
-        final DatagramAcceptorConfig config = m_acceptor.getDefaultConfig();
+    @Override
+    protected void bind(final InetSocketAddress bindAddress) {
+        this.bindAddress = bindAddress;
+        acceptor.addListener(this);
+
+        final DatagramAcceptorConfig config = acceptor.getDefaultConfig();
         config.setThreadModel(ThreadModel.MANUAL);
         config.getSessionConfig().setReuseAddress(true);
-        
-        final ProtocolCodecFilter codecFilter = 
-            new ProtocolCodecFilter(this.m_codecFactory);
+
+        final ProtocolCodecFilter codecFilter = new ProtocolCodecFilter(
+                this.codecFactory);
         config.getFilterChain().addLast("stunFilter", codecFilter);
-        config.getFilterChain().addLast("executor", 
-            new ExecutorFilter(m_threadPool));
-        
-        try
-            {
-            m_acceptor.bind(bindAddress, this.m_ioHandler, config);
-            LOG.debug("Started STUN server!!");
-            }
-        catch (final IOException e)
-            {
-            LOG.error("Could not bind server", e);
-            }
-        }
+        config.getFilterChain().addLast("executor",
+                new ExecutorFilter(threadPool));
 
-    public void addIoServiceListener(final IoServiceListener serviceListener)
-        {
-        this.m_acceptor.addListener(serviceListener);
+        try {
+            acceptor.bind(bindAddress, this.ioHandler, config);
+            log.debug("Started STUN server!!");
+        } catch (final IOException e) {
+            log.error("Could not bind server", e);
         }
-    
-    public void close()
-        {
-        this.m_acceptor.unbindAll();
-        }
-
     }
+
+    public void addIoServiceListener(final IoServiceListener serviceListener) {
+        this.acceptor.addListener(serviceListener);
+    }
+
+    public void close() {
+        log.info("Closing UDP STUN server on "+this.bindAddress);
+        this.acceptor.unbindAll();
+        this.acceptor.removeListener(this);
+    }
+
+}

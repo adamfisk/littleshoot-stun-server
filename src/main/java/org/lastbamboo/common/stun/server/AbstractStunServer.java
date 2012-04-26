@@ -32,13 +32,13 @@ public abstract class AbstractStunServer implements StunServer,
      */
     private static final int STUN_PORT = 3478;
 
-    private InetSocketAddress m_boundAddress;
+    private InetSocketAddress boundAddress;
 
-    protected final String m_threadName;
+    protected final String threadName;
 
-    protected final ProtocolCodecFactory m_codecFactory;
+    protected final ProtocolCodecFactory codecFactory;
 
-    protected final IoHandler m_ioHandler;
+    protected final IoHandler ioHandler;
     
     /**
      * Creates a new STUN server.
@@ -48,85 +48,68 @@ public abstract class AbstractStunServer implements StunServer,
      * demultiplexes STUN with the media protocol.
      * @param threadName The name of the thread to use.
      */
-    public AbstractStunServer(final ProtocolCodecFactory codecFactory, 
-        final IoHandler ioHandler, final String threadName)
-        {
+    public AbstractStunServer(final ProtocolCodecFactory codecFactory,
+            final IoHandler ioHandler, final String threadName) {
         ByteBuffer.setUseDirectBuffers(false);
         ByteBuffer.setAllocator(new SimpleByteBufferAllocator());
-        m_codecFactory = codecFactory;
-        m_ioHandler = ioHandler;
-        m_threadName = threadName;
-        }
+        this.codecFactory = codecFactory;
+        this.ioHandler = ioHandler;
+        this.threadName = threadName;
+    }
 
-    public void start() throws IOException
-        {
-        start(new InetSocketAddress(NetworkUtils.getLocalHost(),STUN_PORT));
-        }
-    
-    public void start(final InetSocketAddress bindAddress) throws IOException
-        {
-        final InetSocketAddress bindAddressToUse = 
-            createBindAddress(bindAddress);
+    public void start() throws IOException {
+        start(new InetSocketAddress(NetworkUtils.getLocalHost(), STUN_PORT));
+    }
+
+    public void start(final InetSocketAddress bindAddress) throws IOException {
+        final InetSocketAddress bindAddressToUse = createBindAddress(bindAddress);
 
         bind(bindAddressToUse);
-        }
-    
-    protected abstract void bind(final InetSocketAddress bindAddress) 
-        throws IOException;
+    }
+
+    protected abstract void bind(final InetSocketAddress bindAddress)
+            throws IOException;
 
     private static InetSocketAddress createBindAddress(
-        final InetSocketAddress bindAddress)
-        {
-        if (bindAddress == null)
-            {
-            try
-                {
+            final InetSocketAddress bindAddress) {
+        if (bindAddress == null) {
+            try {
                 return new InetSocketAddress(NetworkUtils.getLocalHost(), 0);
-                }
-            catch (UnknownHostException e)
-                {
+            } catch (UnknownHostException e) {
                 LOG.warn("Could not get local host address", e);
                 return null;
-                }
             }
-        else
-            {
+        } else {
             return bindAddress;
-            }
         }
+    }
 
-    public InetSocketAddress getBoundAddress()
-        {
-        return this.m_boundAddress;
-        }
+    public InetSocketAddress getBoundAddress() {
+        return this.boundAddress;
+    }
 
-    public void serviceActivated(final IoService service, 
-        final SocketAddress serviceAddress, final IoHandler handler, 
-        final IoServiceConfig config)
-        {
+    public void serviceActivated(final IoService service,
+            final SocketAddress serviceAddress, final IoHandler handler,
+            final IoServiceConfig config) {
         // Note this is called immediately after the call to bind when
         // starting the server, so the bound address will always be set
         // if start has been called, at least with MINA 1.1.1.
         LOG.debug("Setting bound address to: {}", serviceAddress);
-        this.m_boundAddress = (InetSocketAddress) serviceAddress;
-        }
-
-    public void serviceDeactivated(final IoService service, 
-        final SocketAddress serviceAddress, final IoHandler handler, 
-        final IoServiceConfig config)
-        {
-        LOG.debug("Session deactivated on service address: {}",
-            serviceAddress);
-        }
-
-    public void sessionCreated(final IoSession session)
-        {
-        LOG.debug("Session created: {}", session);
-        }
-
-    public void sessionDestroyed(final IoSession session)
-        {
-        LOG.debug("Session destroyed: {}", session);
-        }
-
+        this.boundAddress = (InetSocketAddress) serviceAddress;
     }
+
+    public void serviceDeactivated(final IoService service,
+            final SocketAddress serviceAddress, final IoHandler handler,
+            final IoServiceConfig config) {
+        LOG.debug("Session deactivated on service address: {}", serviceAddress);
+    }
+
+    public void sessionCreated(final IoSession session) {
+        LOG.debug("Session created: {}", session);
+    }
+
+    public void sessionDestroyed(final IoSession session) {
+        LOG.debug("Session destroyed: {}", session);
+    }
+
+}
