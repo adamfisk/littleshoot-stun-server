@@ -27,7 +27,9 @@ public class UdpStunServer extends AbstractStunServer {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    private final ExecutorService threadPool;
+    private static final ExecutorService threadPool =  
+        Executors.newCachedThreadPool(new DaemonThreadFactory(
+            "UDP-STUN-Server-Thread-Pool-"));
 
     private final DatagramAcceptor acceptor;
 
@@ -44,8 +46,6 @@ public class UdpStunServer extends AbstractStunServer {
     public UdpStunServer(final ProtocolCodecFactory codecFactory,
             final IoHandler ioHandler, final String threadName) {
         super(codecFactory, ioHandler, threadName);
-        threadPool = Executors.newCachedThreadPool(new DaemonThreadFactory(
-                "UDP-STUN-Server-Thread-Pool-" + threadName));
         acceptor = new DatagramAcceptor(threadPool);
     }
     
