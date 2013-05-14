@@ -3,7 +3,7 @@
     <groupId>org.littleshoot</groupId>
     <artifactId>stun-server</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.3</version>
+    <version>1.0.4-SNAPSHOT</version>
     <name>LittleShoot STUN Server</name>
     <url>http://www.littleshoot.org</url>
 
